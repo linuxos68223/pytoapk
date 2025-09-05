@@ -1,51 +1,39 @@
+from kivy.app import App
+from kivy.uix.image import Image
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.button import Button
+from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
-from kivy.lang import Builder
+import os
 
-from kivymd.app import MDApp
-from kivymd.uix.screen import MDScreen
-from kivymd.utils.set_bars_colors import set_bars_colors
+# Change this path to the folder containing your photos
+PHOTO_DIR = "/sdcard/DCIM/Camera"  # Common path on Android
 
 
-class SampleApp(MDApp):
+class GalleryApp(App):
+    def build(self):
+        root = BoxLayout(orientation="vertical")
 
-    def __init__(self, **kwargs) -> None:
-        super(SampleApp, self).__init__(**kwargs)
-        self.theme_cls.primary_palette = "Darkblue"
+        scroll = ScrollView(size_hint=(1, 1))
+        grid = GridLayout(cols=2, spacing=5, size_hint_y=None)
+        grid.bind(minimum_height=grid.setter('height'))
 
-    def build(self) -> MDScreen:
-        self.appKv="""
-MDScreen:
-    MDButton:
-        style: 'tonal'
-        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        on_press:
-            app.apply_styles("Light") if (not app.theme_cls.theme_style == "Light") else app.apply_styles("Dark")
+        # Load images from folder
+        if os.path.exists(PHOTO_DIR):
+            for file in os.listdir(PHOTO_DIR):
+                if file.lower().endswith((".jpg", ".png", ".jpeg")):
+                    img_path = os.path.join(PHOTO_DIR, file)
+                    btn = Button(size_hint_y=None, height=200)
+                    img = Image(source=img_path, allow_stretch=True, keep_ratio=True)
+                    btn.add_widget(img)
+                    grid.add_widget(btn)
 
-        MDButtonText:
-            text: 'Hello, World!'
-"""
-        AppScreen = Builder.load_string(self.appKv)
-        self.apply_styles("Light")
-        return AppScreen
+        scroll.add_widget(grid)
+        root.add_widget(scroll)
 
-    def apply_styles(self, style: str = "Light") -> None:
-        self.theme_cls.theme_style = style
-        if style == "Light":
-            Window.clearcolor = status_color = nav_color = app.theme_cls.surfaceColor
-            style = "Dark"
-        else:
-            Window.clearcolor = status_color = nav_color = app.theme_cls.surfaceColor
-            style = "Light"
-        self.set_bars_colors(status_color, nav_color, style)
+        return root
 
-    def set_bars_colors(self, status_color: list[float] = [1.0, 1.0, 1.0, 1.0], nav_color: list[float] = [1.0, 1.0, 1.0, 1.0], style: str = "Dark") -> None:
-        set_bars_colors(
-            status_color,  # status bar color
-            nav_color,  # navigation bar color
-            style,  # icons style of status and navigation bar
-        )
 
 if __name__ == "__main__":
-    app = SampleApp()
-    app.run()
-    
+    GalleryApp().run()
