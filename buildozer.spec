@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = Galary
+title = calculator
 
 # (str) Package name
-package.name = galary
+package.name = calculator
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.novfensec
@@ -450,5 +450,6 @@ warn_on_root = 1
 #    Then, invoke the command line with the "demo" profile:
 #
 #buildozer --profile demo android debug
+
 
 
