@@ -32,7 +32,6 @@ jobs:
           key: ${{ runner.os }}-buildozer-global
           restore-keys: |
             ${{ runner.os }}-buildozer-global
-
       - name: Cache Buildozer directory in app
         uses: actions/cache@v4
         with:
@@ -40,7 +39,6 @@ jobs:
           key: ${{ runner.os }}-buildozer-app
           restore-keys: |
             ${{ runner.os }}-buildozer-app
-
       - name: Cache Android SDK
         uses: actions/cache@v4
         with:
@@ -48,7 +46,6 @@ jobs:
           key: ${{ runner.os }}-android-sdk
           restore-keys: |
             ${{ runner.os }}-android-sdk
-
       # Install dependencies
       - name: Install dependencies
         run: |
@@ -95,7 +92,6 @@ jobs:
             libffi-dev \
             libssl-dev \
             automake
-
       # Set up Java 17 required by Gradle
       - name: Setup Java 17 required by Gradle
         uses: actions/setup-java@v4
@@ -142,7 +138,7 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: apkpackage
+          name: package
           path: |
             bin/*.apk
             bin/*.aab
